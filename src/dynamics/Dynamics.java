@@ -72,6 +72,14 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
     Dynamics() {
         go = true;
 
+        // ss = new SolarSystem( this );
+        ss = new SolarSystemApollo11( this );
+        tetra = new Tetrahedron( this );
+
+        ss.setAxialRotationParams();
+        ss.createMaps();
+        ss.setAllSiderealClocks( elapsedTime );
+
         this.addWindowListener(this);   // Register this class as a window event listener
         this.addMouseListener(this);    // Register this class as a mouse event listener
 
@@ -130,14 +138,6 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
         screenYoffset = canvasSize.height / 2.0;
         
         selectOption();
-        
-//      ss = new SolarSystem( this );
-        ss = new SolarSystemApollo11( this );
-        tetra = new Tetrahedron( this );        
-        
-        ss.setAxialRotationParams();
-        ss.createMaps();
-        ss.setAllSiderealClocks( elapsedTime );
     }
 
     public void start() {
