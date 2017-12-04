@@ -49,7 +49,7 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
     Process proc;
 //  FoucaultPendulum fp1;
     FallingTower ft1;
-    
+
     double daySecs = 24.0 * 60.0 * 60.0;     // seconds per day
     double elapsedTime = 64800.0 - 197.44;   // elapsed time since simulation start (18hours added to turn Greenwich towards sun on 21 dec 2012)
                                              // correction 0f 198.2 seconds to match Betelgeuse altitude and azimuth (Feb 2015)
@@ -58,7 +58,7 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
     double initialJDCT;
     double targetJDCT;
     double finalJDCT;
-    double baseModifiedJDCT = 2400000.5;     // base of Modified Julian Date (add to produce Julian Date) 
+    double baseModifiedJDCT = 2400000.5;     // base of Modified Julian Date (add to produce Julian Date)
     double currentYear = 2012;
     double currentMonth = 12;
     double currentDay = 21;
@@ -152,7 +152,7 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
         Thread myThread = Thread.currentThread();
         while (testThread == myThread) {
             if ( go ) {
-  
+
                 if ( count == 5 ) {
                     ft1 = new FallingTower( this, 4, 32.543618, 44.42408, 1.0, 100000.0 );   // Babylon
                 }
@@ -160,18 +160,18 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
                     ft1.moveReferenceFrame();
                     if ( count%100 == 0 ) {
                         if ( option == 4 || option == 10 && ft1.index > 0 ) {
-                            ft1.index--;                        
+                            ft1.index--;
                             ft1.flagUnfixed(ft1.currentState[ ft1.index ]);
                         }
                     }
                 }
-                  
-                ss.moveEuler( dt );     
+
+                ss.moveEuler( dt );
                 tetra.moveEuler( dt );
-                
+
                 currentDate = ( advanceCalendar( dt ) );
                 ss.setAllSiderealClocks( elapsedTime );
-                
+
                 repaint();
                 count++;
             }
@@ -195,31 +195,31 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
              currentJDCT = baseJDCT;
              advanceTime = jd - baseJDCT;
              advanceCalendar(daySecs * advanceTime);
-             
+
              setDateByJulianDay( currentJDCT );
          }
-    }     
-         
-    // advance calendar using Julian Day 
+    }
+
+    // advance calendar using Julian Day
     String advanceCalendar(double dt) {
         String sdate;
         double secondsInDay = 24 * 60 * 60;
-        
+
         // advance elapsed time and current Julian Date
         elapsedTime += dt;
         currentJDCT += dt / secondsInDay;
 
         // update sidereal clock
-        siderealClock = elapsedTime % SiderealDay;      
+        siderealClock = elapsedTime % SiderealDay;
 
         // get new date and time
         sdate = setDateByJulianDay( currentJDCT );
         sdate += " dt=" + (float) dt + " s";
-        
+
         return( sdate );
-    }    
-                 
-         
+    }
+
+
     String setDateByJulianDay( double julianDay ) {
         double z, w, x, a, b, c, d, e, f;
         double nyear, nmonth, nday, nhour, nminute, nsecond;
@@ -230,14 +230,14 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
         double secondsInHour = 60 * 60;
         double secondsInMinute = 60;
         String sdate, dayPrefix, hourPrefix;
- 
+
         int year, month, dayOfMonth;
-// from   http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html        
-//        To convert a Julian Day Number to a Gregorian date, assume that it is for 0 hours, 
-//        Greenwich time (so that it ends in 0.5). Do the following calculations, again dropping 
-//        the fractional part of all multiplicatons and divisions. 
-//        Note: This method will not give dates accurately on the Gregorian Proleptic Calendar, 
-//        i.e., the calendar you get by extending the Gregorian calendar backwards to years earlier 
+// from   http://quasar.as.utexas.edu/BillInfo/JulianDatesG.html
+//        To convert a Julian Day Number to a Gregorian date, assume that it is for 0 hours,
+//        Greenwich time (so that it ends in 0.5). Do the following calculations, again dropping
+//        the fractional part of all multiplicatons and divisions.
+//        Note: This method will not give dates accurately on the Gregorian Proleptic Calendar,
+//        i.e., the calendar you get by extending the Gregorian calendar backwards to years earlier
 //        than 1582. using the Gregorian leap year rules. In particular, the method fails if Y<400.
 //        check 2299160.5 = 1582 October 15        (checked)
 
@@ -257,8 +257,8 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
               currentYear = (int)(c-4715 );  // (if Month is January or February) or C-4716 (otherwise)
           } else {
               currentYear = (int)(c-4716);
-          }    
-          
+          }
+
           // Julian days seem to start at noon.
           currentSecond = ( julianDay - (int)julianDay ) * secondsInDay;
           currentSecond -= secondsInDay * 0.5;
@@ -276,10 +276,10 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
                      + prefix(nhour) + ":"
                      + prefix(nminute) + ":"
                      + prefix(nsecond);
-          
+
           return( sdate );
     }
-    
+
     // prefix with '0' if necessary
     String prefix(double number) {
         String s;
@@ -294,65 +294,65 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
     void selectOption() {
         if ( option == 1 ) {
             // Apollo 11 trajectory
-            centralBody =   4;            
+            centralBody =   4;
             clearScreen = false;
             dt =  16.0;
             screenXYscale =    4500.0 * 10.0/1E11;
         } else if ( option == 2 ) {
             // Sun and planet orbits
-            centralBody =   1;            
+            centralBody =   1;
             clearScreen = false;
             dt = 2048.0;
             screenXYscale =    1.0 * 10.0/1E11;
         } else if ( option == 3 ) {
             // Venus
-            centralBody =   3;            
+            centralBody =   3;
             clearScreen = true;
             dt = 32.0;
-            screenXYscale =    200000.0 * 10.0/1E11;            
+            screenXYscale =    200000.0 * 10.0/1E11;
         } else if ( option == 4 ) {
             // Earth Falling Tower
-            centralBody =   4;            
+            centralBody =   4;
             clearScreen = true;
             dt = 32.0;
-            screenXYscale =    200000.0 * 10.0/1E11;            
+            screenXYscale =    200000.0 * 10.0/1E11;
         } else if ( option == 5 ) {
             // Mars
-            centralBody =   5;            
+            centralBody =   5;
             clearScreen = true;
             dt = 32.0;
-            screenXYscale =    400000.0 * 10.0/1E11;            
+            screenXYscale =    400000.0 * 10.0/1E11;
         } else if ( option == 6 ) {
             // Jupiter
-            centralBody =   6;            
+            centralBody =   6;
             clearScreen = true;
             dt = 32.0;
-            screenXYscale =    20000.0 * 10.0/1E11;            
+            screenXYscale =    20000.0 * 10.0/1E11;
         } else if ( option == 7 ) {
             // Saturn
-            centralBody =   7;            
+            centralBody =   7;
             clearScreen = true;
             dt = 32.0;
-            screenXYscale =    20000.0 * 10.0/1E11;            
+            screenXYscale =    20000.0 * 10.0/1E11;
         } else if ( option == 8 ) {
             // Uranus
-            centralBody =   8;            
+            centralBody =   8;
             clearScreen = true;
             dt = 32.0;
-            screenXYscale =    30000.0 * 10.0/1E11;            
+            screenXYscale =    30000.0 * 10.0/1E11;
         } else if ( option == 9 ) {
             // Neptune
-            centralBody =   9;            
+            centralBody =   9;
             clearScreen = true;
             dt = 32.0;
-            screenXYscale =    30000.0 * 10.0/1E11;            
+            screenXYscale =    30000.0 * 10.0/1E11;
         } else if ( option == 10 ) {
             // Earth Falling Tower surface reference frame view
             // body radii not scaled properly
-            centralBody =   4;            
+            centralBody =   4;
             clearScreen = true;
             dt = 32.0;
-            screenXYscale =    200000.0 * 10.0/1E11;            
+            screenXYscale =    200000.0 * 10.0/1E11;
         } else if ( option == 11 ) {
             // sun
             centralBody =   1;
