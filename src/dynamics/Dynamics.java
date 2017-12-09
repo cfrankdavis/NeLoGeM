@@ -362,7 +362,7 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
         }
     }    
 
-    // MouseLister implementation
+    // MouseListener implementation
     @Override
     public void mouseClicked(MouseEvent e) { }
 
@@ -384,7 +384,7 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
         go = true;
     }
 
-    // WindowLister implementation
+    // WindowListener implementation
     @Override
     public void windowClosing(WindowEvent e) {
         dispose();
