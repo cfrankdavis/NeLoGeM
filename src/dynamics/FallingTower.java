@@ -42,7 +42,7 @@ public class FallingTower {
         screenXYscale =  200000.0 * 10.0/1E11;
         screenXoffset = ap.canvasSize.width / 2.0;
         screenYoffset = ap.canvasSize.height / 2.0;
-        
+
         createStructure( 500000, 500000, 500000 );
 
         rf = new ReferenceFrame( ap, bref, lat, lon, rmul, extend );

@@ -67,8 +67,8 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
     double siderealClock = 0.0;
     double SiderealDay = 86164.090530833;    // Earth sidereal day duration (seconds)
     int nPlanets;
-    
-    
+
+
     Dynamics() {
         go = true;
 
@@ -136,7 +136,7 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
 //      screenXYscale = 1.0 * 10.0/1E11;
         screenXoffset = canvasSize.width / 2.0;
         screenYoffset = canvasSize.height / 2.0;
-        
+
         selectOption();
     }
 
@@ -360,7 +360,7 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
             dt = 512.0;
             screenXYscale =    1000.0 * 10.0/1E11;
         }
-    }    
+    }
 
     // MouseListener implementation
     @Override
