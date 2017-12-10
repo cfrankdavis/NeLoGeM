@@ -41,9 +41,8 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
     int centralBody =   4;
     double screenXoffset, screenYoffset, screenXYscale;
     double dt =  16.0;
-    double G = 6.671984315419034E-11;                                           // gravitational constant
+    double G = 6.671984315419034E-11;       // gravitational constant
     boolean localGravity = false;
-//  SolarSystem ss;
     SolarSystemApollo11 ss;
     Tetrahedron tetra;
     Process proc;
@@ -74,11 +73,15 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
 
         // ss = new SolarSystem( this );
         ss = new SolarSystemApollo11( this );
+//      ss = new SolarSystemTestbed( this );
         tetra = new Tetrahedron( this );
 
         ss.setAxialRotationParams();
         ss.createMaps();
         ss.setAllSiderealClocks( elapsedTime );
+
+//      System.out.println( 7.023694035922034E+07 - 7.023698945180266E7  );
+//      ss.setupTest();
 
         this.addWindowListener(this);   // Register this class as a window event listener
         this.addMouseListener(this);    // Register this class as a mouse event listener
@@ -152,6 +155,16 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
         Thread myThread = Thread.currentThread();
         while (testThread == myThread) {
             if ( go ) {
+/*
+                // i, j are dt and orbit radius indices
+                for ( int j=0; j<3; j++ ) {
+                    for ( int i=0; i<3; i++ ) {
+                        ss.test( i, j );
+                    }
+                }
+*/
+//              go = false;
+
 
                 if ( count == 5 ) {
                     ft1 = new FallingTower( this, 4, 32.543618, 44.42408, 1.0, 100000.0 );   // Babylon
@@ -159,15 +172,21 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
                 if ( count > 5 ) {
                     ft1.moveReferenceFrame();
                     if ( count%100 == 0 ) {
-                        if ( option == 4 || option == 10 && ft1.index > 0 ) {
+                        if ( ( option == 4 || option == 10 ) && ft1.index > 0 ) {
                             ft1.index--;
                             ft1.flagUnfixed(ft1.currentState[ ft1.index ]);
                         }
                     }
+                    ft1.moveEuler(dt);
                 }
 
                 ss.moveEuler( dt );
                 tetra.moveEuler( dt );
+
+                if ( option==1 || option==12 ) {
+                    System.out.println( currentDate + " " + Mathut.distanceBetween( ss.b[11], ss.b[4].currentState) / 1000.0 );
+                    ss.b[11].currentState.printStateVectorKm();
+                }
 
                 currentDate = ( advanceCalendar( dt ) );
                 ss.setAllSiderealClocks( elapsedTime );
@@ -201,20 +220,20 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
     }
 
     // advance calendar using Julian Day
-    String advanceCalendar(double dt) {
+    String advanceCalendar(double step) {
         String sdate;
         double secondsInDay = 24 * 60 * 60;
 
         // advance elapsed time and current Julian Date
-        elapsedTime += dt;
-        currentJDCT += dt / secondsInDay;
+        elapsedTime += step;
+        currentJDCT += step / secondsInDay;
 
         // update sidereal clock
         siderealClock = elapsedTime % SiderealDay;
 
         // get new date and time
         sdate = setDateByJulianDay( currentJDCT );
-        sdate += " dt=" + (float) dt + " s";
+        sdate += " dt=" + (float) step + " s";
 
         return( sdate );
     }
@@ -296,7 +315,7 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
             // Apollo 11 trajectory
             centralBody =   4;
             clearScreen = false;
-            dt =  16.0;
+            dt =  60.0;
             screenXYscale =    4500.0 * 10.0/1E11;
         } else if ( option == 2 ) {
             // Sun and planet orbits
@@ -359,6 +378,12 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
             clearScreen = true;
             dt = 512.0;
             screenXYscale =    1000.0 * 10.0/1E11;
+        } else if ( option == 12 ) {
+            // Moon (in order to view Apollo11 S-IVB close approach)
+            centralBody =   10;
+            clearScreen = false;
+            dt = 128.0;
+            screenXYscale =    200000.0 * 10.0/1E11;
         }
     }
 
@@ -415,3 +440,4 @@ public class Dynamics extends JFrame implements Runnable, MouseListener, WindowL
         d.start();
     }
 }
+
